@@ -1,9 +1,9 @@
 import { Observable } from "rxjs";
 
-const addItem = (item: any) => {
+const addItem = (item: any, number: any) => {
   const rootElem = document.getElementById('root');
   const liElem = document.createElement('li');
-  const itemText = document.createTextNode(item);
+  const itemText = document.createTextNode(item + number);
 
   liElem.appendChild(itemText);
   rootElem.appendChild(liElem);
@@ -11,17 +11,33 @@ const addItem = (item: any) => {
 
 const observable = Observable.create((observer: any) => {
   try {
+    let count = 1;
     observer.next('Mission started');
-    observer.next('Mission Running 1');
-    observer.complete();
-    observer.next('This after completion');
+    
+    const intervalId = setInterval(() => {
+      observer.next(`Mission Running ${count++}`);
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(intervalId);
+    }, 8000);
   } catch(err) {
     observer.error(err);
   }
 });
 
-observable.subscribe(
-  (item: any) => addItem(item),
-  (error: any) => addItem(error),
-  () => addItem('Mission accomplished')
+const observer = observable.subscribe(
+  (item: any) => addItem(item, ''),
+  (error: any) => addItem(error, ''),
+  () => addItem('Mission accomplished', '')
 );
+
+const observer2 = observable.subscribe(
+  (item: any) => addItem(item, 2)
+);
+
+observer.add(observer2);
+
+setTimeout(() => {
+  observer.unsubscribe();
+}, 4000);
