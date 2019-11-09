@@ -5,7 +5,7 @@
   "repository": "git@github.com:rajudandigam/RxJS.git",
   "author": "Raju Dandigam <raju0574@gmail.com>",
   "license": "MIT",
-  "script": {
+  "scripts": {
     "start": "webpack-dev-server --mode development"
   },
   "dependencies": {
