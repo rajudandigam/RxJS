@@ -1,4 +1,5 @@
-import { Observable, fromEvent } from "rxjs";
+import { Observable } from "rxjs";
+import { Subject } from "rxjs";
 
 const addItem = (item: any) => {
   const rootElem = document.getElementById('root');
@@ -8,6 +9,8 @@ const addItem = (item: any) => {
   liElem.appendChild(itemText);
   rootElem.appendChild(liElem);
 };
+
+// Observable
 
 const observable = Observable.create((observer: any) => {
   try {
@@ -26,11 +29,13 @@ const observable = Observable.create((observer: any) => {
   }
 });
 
+/*
 const eventObservable = fromEvent(document, 'mousemove');
 
 setTimeout(() => {
   eventObservable.subscribe((x: any) => addItem(x))
 }, 2000);
+*/
 
 const observer = observable.subscribe(
   (item: any) => addItem(item),
@@ -47,3 +52,26 @@ observer.add(observer2);
 setTimeout(() => {
   observer.unsubscribe();
 }, 4000);
+
+// Subjects
+
+const subject = new Subject();
+
+subject.subscribe(
+  data => addItem('Observer 1: ' + data),
+  err => addItem(err),
+  () => addItem('Observer 1 completed')
+);
+
+subject.next('The first thing sent');
+
+const subjectObserver2 = subject.subscribe(
+  data => addItem('Observer 2: '+ data)
+);
+
+subject.next('The second thing has been sent');
+subject.next('The second thing has been sent');
+
+subjectObserver2.unsubscribe();
+
+subject.next('The final thing has been sent');
