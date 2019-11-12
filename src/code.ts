@@ -1,5 +1,4 @@
-import { Observable } from "rxjs";
-import { Subject } from "rxjs";
+import { Observable, Subject, merge } from "rxjs";
 
 const addItem = (item: any) => {
   const rootElem = document.getElementById('root');
@@ -75,3 +74,18 @@ subject.next('The second thing has been sent');
 subjectObserver2.unsubscribe();
 
 subject.next('The final thing has been sent');
+
+// Operators - Merge
+
+const mergeObervable1 = Observable.create((observer: any) => {
+  observer.next('Merge Observer 1');
+});
+
+const mergeObervable2 = Observable.create((observer: any) => {
+  observer.next('Merge Observer 2');
+});
+
+const mergedObservable = merge(mergeObervable1, mergeObervable2);
+
+mergedObservable.subscribe((x: any) => addItem(x));
+
